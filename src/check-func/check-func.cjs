@@ -10,27 +10,28 @@ const { checkFuncAnnotation } = require("./check-func-annotation.cjs")
  * @returns {boolean}
  */
 const checkFuncStartsWithUppercase = (opts, path) => {
-    if (!opts.uppercaseFuncNames) { return false }
+   if (!opts.uppercaseFuncNames) { return false }
 
-    let funcName;
-    switch (path.type) {
-        case "FunctionDeclaration":
-            funcName = path.node.id.name
-            break;
-        case "FunctionExpression":
-            funcName = path.parent.id?.name;
-            break;
-        case "ArrowFunctionExpression":
-            funcName = path.parent.id?.name
-            break;
-        default:
-            return false;
-    }
+   let funcName;
+   switch (path.type) {
+      case "FunctionDeclaration":
+         funcName = path.node.id.name
+         break;
+      case "FunctionExpression":
+         funcName = path.parent.id?.name;
+         break;
+      case "ArrowFunctionExpression":
+         funcName = path.parent.id?.name
+         break;
+      default:
+         return false;
+   }
 
-    if (!funcName) { return false }
+   if (!funcName) { return false }
 
-    return (funcName[0] === funcName[0].toUpperCase());
+   return (funcName[0] === funcName[0].toUpperCase());
 }
+
 
 /**
  * Check that the first param ( `props` ) exists and is an object pattern.
@@ -63,18 +64,18 @@ const checkFunc = (funcPath, opts, state) => {
    // Make sure the function wasn't already transformed.
    if (funcPath.transformed) return false
 
-	if (!checkFuncAnnotation(opts, funcPath, state)) {
-        if (!checkFuncStartsWithUppercase(opts, funcPath, state)) {
-            return { funcAnnotation: false }
-        }
-    }
+   if (!checkFuncAnnotation(opts, funcPath, state)) {
+      if (!checkFuncStartsWithUppercase(opts, funcPath, state)) {
+          return { funcAnnotation: false }
+      }
+   }
 
-	if (!checkFirstParam(funcPath)) return {
+   if (!checkFirstParam(funcPath)) return {
       funcAnnotation: true,
       propDestructuring: false
    }
 
-	return {
+   return {
       funcAnnotation: true,
       propDestructuring: true
    }
